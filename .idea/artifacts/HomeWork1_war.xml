@@ -7,7 +7,7 @@
         <packaging>war</packaging>
       </options>
     </properties>
-    <root id="archive" name="HomeWork1.war">
+    <root id="archive" name="jee.war">
       <element id="artifact" artifact-name="HomeWork1:war exploded" />
     </root>
   </artifact>
