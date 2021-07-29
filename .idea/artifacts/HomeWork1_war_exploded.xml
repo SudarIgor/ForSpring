@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="HomeWork1:war exploded">
-    <output-path>$PROJECT_DIR$/HomeWork1/target/HomeWork1</output-path>
+    <output-path>$PROJECT_DIR$/HomeWork1/target/jee</output-path>
     <properties id="maven-jee-properties">
       <options>
         <exploded>true</exploded>
@@ -13,9 +13,14 @@
         <element id="directory" name="classes">
           <element id="module-output" name="HomeWork1" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.1.7" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.1.7" />
+        </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/HomeWork1/target/HomeWork1/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/HomeWork1/target/jee/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="HomeWork1/web/Web" />
     </root>
