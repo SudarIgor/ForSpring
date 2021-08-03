@@ -1,4 +1,4 @@
-package com.gb.webaapp.homework3.Controllers;
+package com.gb.webaapp.homework3.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
