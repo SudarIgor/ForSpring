@@ -15,7 +15,9 @@
         <tr>
             <td>ID</td>
             <td>Title</td>
-            <td>ost</td>
+            <td></td>
+            <td>Cost</td>
+            <td></td>
             <td></td>
         </tr>
         </thead>
@@ -23,7 +25,9 @@
         <tr th:each="s : ${products}">
             <td th:text="${s.id}"></td>
             <td th:text="${s.title}"></td>
+            <td><a th:href="@{'/products/chang_cost?id='+ ${s.id} + '&a=-1'}"  class="btn btn-primary">bt-</a> </td>
             <td th:text="${s.cost}"></td>
+            <td><a th:href="@{'/products/chang_cost?id='+ ${s.id} + '&a=1'}"  class="btn btn-primary">bt+</a> </td>
             <td>
                 <a th:href="@{'/products/show/' + ${s.id}}" class="btn btn-primary">Инфо</a>
             </td>

@@ -42,4 +42,10 @@ public class ProductsController {
         return "redirect:/products/show_all";
     }
 
+    @GetMapping("/chang_cost")
+    public String changeCost(@RequestParam long id, @RequestParam int a) {
+        productsService.changeCost(id,a);
+        return "redirect:/products/show_all";
+    }
+
 }

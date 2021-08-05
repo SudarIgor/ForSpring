@@ -28,4 +28,8 @@ public class ProductsService {
     public void save(Product product) {
         productsRepository.save(product);
     }
+
+    public void changeCost(Long id, int a){
+       findById(id).setCost(findById(id).getCost() + a);
+    }
 }
