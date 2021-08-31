@@ -13,7 +13,7 @@ public class Product {
     private Long id;
 
     @Column(name = "title")
-    private String name;
+    private String title;
 
     @Column(name = "price")
     private double price;
@@ -30,12 +30,12 @@ public class Product {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String name) {
+        this.title = name;
     }
 
     public double getPrice() {
@@ -59,6 +59,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product: " + ", name='" + name  + ", price=" + price;
+        return "Product: " + "id=" + id  + ", name='" + title + ", price=" + price;
     }
 }

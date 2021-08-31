@@ -45,18 +45,20 @@ public class ProductDao {
         session.getTransaction().commit();
     }
 
-    public List<Client> findByIdClients(Long id) {
+    public List<String> findByIdClients(Long id) {
         Session session = factory.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         Product productFromDb = session.createQuery("SELECT p FROM Product p WHERE p.id = :id", Product.class)
                 .setParameter("id", id)
                 .getSingleResult();
         List<Client> clients = productFromDb.getClients();
-        List<Client> newList = new ArrayList<>(List.copyOf(clients));
-        newList.clear();
-//        System.out.println(clients);
+        List<String> clientsList = new ArrayList<>();
+        for (Client client : clients) {
+            clientsList.add(client.getName());
+        }
         session.getTransaction().commit();
 
-        return clients;
+
+        return clientsList;
     }
 }

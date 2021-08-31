@@ -29,5 +29,7 @@ public class ClientsService {
         clientDao.save(client);
     }
 
+    public List<String> findByIdProducts(Long id){ return clientDao.findByIdProducts(id);}
+
 
 }

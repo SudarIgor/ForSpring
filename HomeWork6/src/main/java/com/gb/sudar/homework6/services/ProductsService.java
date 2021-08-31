@@ -28,7 +28,7 @@ public class ProductsService {
         productDao.save(product);
     }
 
-    public List<Client> findByIdClients(Long id){ return productDao.findByIdClients(id);}
+    public List<String> findByIdClients(Long id){ return productDao.findByIdClients(id);}
 
 
 }
