@@ -37,6 +37,51 @@ public class ProductController {
         return findAll();
     }
 
+    @GetMapping("/products/filter")
+    public List<ProductDto> findByBetweenPrice(
+            @RequestParam (name = "min_price", required = false) Double min_price,
+            @RequestParam (name = "max_price", required = false) Double max_price) {
+        List<Product> products= null;
+        List<ProductDto> productDtos = null;
+
+        if ( (max_price!=null) && (min_price!=null) ){
+            products = new ArrayList<>(productService.findByBetweenPcrie(min_price, max_price));
+            productDtos = new ArrayList<>();
+            for (Product p : products) {
+                productDtos.add(new ProductDto(p));
+            }
+            return productDtos;
+        }
+        if ( (max_price==null) && (min_price==null) ){
+            products = new ArrayList<>(productService.findAll());
+            productDtos = new ArrayList<>();
+            for (Product p: products) {
+                productDtos.add(new ProductDto(p));
+            }
+            return productDtos;
+        }
+
+        if ( (min_price==null) && (max_price!=null) ) {
+            products = new ArrayList<>(productService.findByMaxPrice(max_price));
+            productDtos = new ArrayList<>();
+            for (Product p: products) {
+                productDtos.add(new ProductDto(p));
+            }
+            return productDtos;
+        }
+
+        if ( (min_price!=null) && (max_price==null) ) {
+            products = new ArrayList<>(productService.findByMinPrice(min_price));
+            productDtos = new ArrayList<>();
+            for (Product p: products) {
+                productDtos.add(new ProductDto(p));
+            }
+         return productDtos;
+        }
+
+    return null;
+    }
+
     @PostMapping("/products")
     public ProductDto save(@RequestBody ProductDto productDto) {
         Product product = new Product();
