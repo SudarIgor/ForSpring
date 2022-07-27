@@ -41,8 +41,14 @@ public class ProductRepository {
     }
 
     public void save(Product product){
-        product.setId(count+1);
+        count++;
+        product.setId(count);
         productList.add(product);
     }
 
+    public void update(long id, double cost) {
+        Product product;
+        product = productList.stream().filter(e -> e.getId() == id).findFirst().get();
+        product.setCost(product.getCost() + cost);
+    }
 }

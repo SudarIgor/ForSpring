@@ -14,16 +14,20 @@
         <tr>
             <td>ID</td>
             <td>Title</td>
+            <td></td>
             <td>Cost</td>
+            <td></td>
         </tr>
         <tr>
             <td th:text="${product.id}">id</td>
             <td th:text="${product.title}">title</td>
+            <td>   <a class="btn btn-primary" th:href="@{'/products/' + ${product.id} +'/change_cost?cost=-1'}" > - </a></td>
             <td th:text="${product.cost}">cost</td>
+            <td> <a class="btn btn-primary" th:href="@{'/products/' + ${product.id} +'/change_cost?cost=1'}" > + </a></td>
         </tr>
 
     </table>
-    <a th:href="@{/products/}" class="btn btn-primary">List of products</a>
+    <a th:href="@{/products/show_all}" class="btn btn-primary">List of products</a>
 </div>
 </body>
 </html>

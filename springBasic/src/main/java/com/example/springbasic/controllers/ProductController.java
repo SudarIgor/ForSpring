@@ -18,28 +18,41 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/json")
+    @GetMapping("/json_all")
     @ResponseBody
     public List<Product> productAllJson(){
         return productService.findAll();
     }
 
-    @GetMapping("/")
+    @GetMapping("/json/{id}")
+    @ResponseBody
+    public Product productAllJson(@PathVariable long id){
+        return productService.findById(id);
+    }
+
+//    @RequestBody Product product - означает, что прилетевший в теле запроса json необходимо преобразовать к Product
+    @PostMapping("/json")
+    @ResponseBody
+    public void saveProductJson(@RequestBody Product product){
+        productService.save(product);
+    }
+
+    @GetMapping("/show_all")
     public String productAll(Model model){
         model.addAttribute("products", productService.findAll());
-        return "products";
+        return "products/products";
     }
 
     @GetMapping("/{id}")
     public String productById(Model model, @PathVariable long id){
         model.addAttribute("product", productService.findById(id));
-        return "product";
+        return "products/product";
     }
 
     @GetMapping("/create")
     public String showForm(Model model){
         model.addAttribute("product", new Product());
-        return "create_product";
+        return "products/create_product";
     }
 
 //    @PostMapping("/create")
@@ -52,6 +65,13 @@ public class ProductController {
     @PostMapping("/create")
     public String create(@ModelAttribute("product") Product product){
         productService.save(product);
-        return "redirect:/products/";
+        return "redirect:/products/show_all";
+    }
+
+//    homework 4
+    @GetMapping ("{id}/change_cost")
+    public String changeCost(@PathVariable long id, @RequestParam double cost){
+        productService.update(id, cost);
+        return "redirect:/products/" + id;
     }
 }

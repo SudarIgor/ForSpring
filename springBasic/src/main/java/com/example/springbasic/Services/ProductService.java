@@ -28,4 +28,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    public void update(long id, double cost) {
+        productRepository.update(id, cost);
+    }
 }
