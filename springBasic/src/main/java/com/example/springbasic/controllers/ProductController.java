@@ -55,13 +55,6 @@ public class ProductController {
         return "products/create_product";
     }
 
-//    @PostMapping("/create")
-//    public String createProduct(@RequestParam String title, @RequestParam double cost){
-//        Product product = new Product(0, title, cost);
-//        productService.save(product);
-//        return "redirect:/products/";
-//    }
-
     @PostMapping("/create")
     public String create(@ModelAttribute("product") Product product){
         productService.save(product);
@@ -69,9 +62,30 @@ public class ProductController {
     }
 
 //    homework 4
-    @GetMapping ("{id}/change_cost")
-    public String changeCost(@PathVariable long id, @RequestParam double cost){
-        productService.update(id, cost);
+    @GetMapping ("/{id}/change_price")
+    public String changeCost(@PathVariable long id, @RequestParam double price){
+        productService.updatePrice(id, price);
         return "redirect:/products/" + id;
+    }
+
+    @GetMapping("/{id}/update")
+    public String showFormUpdate(@PathVariable long id,  Model model){
+    model.addAttribute("product", productService.findById(id));
+        return "products/update_product";
+    }
+
+    @PostMapping("/{id}/update")
+    public String update(@PathVariable long id, @ModelAttribute("product") Product product){
+        System.out.println(id);
+        product.setId(id);
+        System.out.println(product);
+        productService.update(product);
+        return "redirect:/products/"+ id;
+    }
+
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable long id){
+        productService.delete(id);
+        return "redirect:/products/show_all";
     }
 }

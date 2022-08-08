@@ -15,19 +15,26 @@
             <td>ID</td>
             <td>Title</td>
             <td></td>
-            <td>Cost</td>
+            <td>Price</td>
+            <td></td>
             <td></td>
         </tr>
         <tr>
             <td th:text="${product.id}">id</td>
             <td th:text="${product.title}">title</td>
-            <td>   <a class="btn btn-primary" th:href="@{'/products/' + ${product.id} +'/change_cost?cost=-1'}" > - </a></td>
-            <td th:text="${product.cost}">cost</td>
-            <td> <a class="btn btn-primary" th:href="@{'/products/' + ${product.id} +'/change_cost?cost=1'}" > + </a></td>
+            <td>   <a class="btn btn-primary" th:href="@{'/products/' + ${product.id} +'/change_price?price=-1'}" > - </a></td>
+            <td th:text="${product.price}">cost</td>
+            <td> <a class="btn btn-primary" th:href="@{'/products/' + ${product.id} +'/change_price?price=1'}" > + </a></td>
+            <td> <a class="btn btn-danger" th:href="@{'/products/' + ${product.id} +'/delete'}" > X </a></td>
         </tr>
 
     </table>
-    <a th:href="@{/products/show_all}" class="btn btn-primary">List of products</a>
+     <div class="mb-3">
+         <a th:href="@{'/products/'+ ${product.id} +'/update'}" class="btn btn-primary">Update products</a>
+         <a th:href="@{/products/show_all}" class="btn btn-primary">List of products</a>
+     </div>
+
+
 </div>
 </body>
 </html>

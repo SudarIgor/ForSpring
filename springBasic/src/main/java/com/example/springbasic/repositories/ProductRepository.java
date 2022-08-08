@@ -46,9 +46,9 @@ public class ProductRepository {
         productList.add(product);
     }
 
-    public void update(long id, double cost) {
+    public void updatePrise(long id, double cost) {
         Product product;
         product = productList.stream().filter(e -> e.getId() == id).findFirst().get();
-        product.setCost(product.getCost() + cost);
+        product.setPrice(product.getPrice() + cost);
     }
 }
