@@ -1,6 +1,7 @@
 package com.example.springbasic.controllers;
 
-import com.example.springbasic.Services.ProductService;
+import com.example.springbasic.model.User;
+import com.example.springbasic.services.ProductService;
 import com.example.springbasic.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,7 +62,6 @@ public class ProductController {
         return "redirect:/products/show_all";
     }
 
-//    homework 4
     @GetMapping ("/{id}/change_price")
     public String changeCost(@PathVariable long id, @RequestParam double price){
         productService.updatePrice(id, price);
@@ -87,5 +87,11 @@ public class ProductController {
     public String delete(@PathVariable long id){
         productService.delete(id);
         return "redirect:/products/show_all";
+    }
+
+    @GetMapping("/{id}/users")
+    @ResponseBody
+    public List<User> showUsers( @PathVariable long id){
+        return productService.showUsers(id);
     }
 }

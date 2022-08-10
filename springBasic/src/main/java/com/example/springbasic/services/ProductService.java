@@ -1,8 +1,8 @@
-package com.example.springbasic.Services;
+package com.example.springbasic.services;
 
 import com.example.springbasic.model.Product;
+import com.example.springbasic.model.User;
 import com.example.springbasic.repositories.ProductDAO;
-import com.example.springbasic.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,13 +16,6 @@ public class ProductService {
     public ProductService(ProductDAO productDAO) {
         this.productRepository = productDAO;
     }
-
-//        private ProductRepository productRepository;
-//
-//    @Autowired
-//    public ProductService(ProductRepository productRepository) {
-//        this.productRepository = productRepository;
-//    }
 
     public Product findById (long id){
         return productRepository.findeById(id);
@@ -46,5 +39,9 @@ public class ProductService {
 
     public void delete(long id) {
         productRepository.delete(id);
+    }
+
+    public List<User> showUsers(long id){
+        return productRepository.showUsers(id);
     }
 }

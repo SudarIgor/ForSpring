@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Products page</h1>
+        <h1 th:text="${user.name} + '`s products' "/>
         <br>
         <table  class="table table-striped">
             <tr>
@@ -27,7 +27,7 @@
         </table>
         <span th:text="'Всего продуктов: ' + ${products.size()}"/>
         <div class="p-3 col-6">
-            <a th:href="@{/products/create}" class="btn btn-primary" >Create new product</a>
+
             <a th:href="@{/index}" class="btn btn-primary">index</a>
         </div>
 

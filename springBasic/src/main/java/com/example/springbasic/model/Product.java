@@ -1,6 +1,7 @@
 package com.example.springbasic.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="products")
@@ -15,6 +16,14 @@ public class Product {
 
     @Column (name="price")
     private double price;
+
+    @ManyToMany
+    @JoinTable(
+            name = "products_categories",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> users;
 
 
     public Product() {
@@ -48,6 +57,14 @@ public class Product {
 
     public void setPrice(double cost) {
         this.price = cost;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     @Override
