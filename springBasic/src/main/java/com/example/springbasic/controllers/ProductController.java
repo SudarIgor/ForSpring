@@ -1,6 +1,8 @@
 package com.example.springbasic.controllers;
 
-import com.example.springbasic.model.User;
+import com.example.springbasic.DTO.ProductDto;
+import com.example.springbasic.model.Category;
+import com.example.springbasic.services.CategoryService;
 import com.example.springbasic.services.ProductService;
 import com.example.springbasic.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +10,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/products")
 public class ProductController {
     private ProductService productService;
+    private CategoryService categoryService;
+
+
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CategoryService categoryService) {
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/json_all")
@@ -27,7 +34,7 @@ public class ProductController {
 
     @GetMapping("/json/{id}")
     @ResponseBody
-    public Product productAllJson(@PathVariable long id){
+    public Optional<Product> productAllJson(@PathVariable long id){
         return productService.findById(id);
     }
 
@@ -46,7 +53,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String productById(Model model, @PathVariable long id){
-        model.addAttribute("product", productService.findById(id));
+        model.addAttribute("product", Optional.ofNullable(new ProductDto(productService.findById(id).get())));
         return "products/product";
     }
 
@@ -70,28 +77,27 @@ public class ProductController {
 
     @GetMapping("/{id}/update")
     public String showFormUpdate(@PathVariable long id,  Model model){
-    model.addAttribute("product", productService.findById(id));
+    model.addAttribute("product", new ProductDto(productService.findById(id).get()));
         return "products/update_product";
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable long id, @ModelAttribute("product") Product product){
-        System.out.println(id);
-        product.setId(id);
-        System.out.println(product);
-        productService.update(product);
+    public String update(@PathVariable long id, @ModelAttribute("product") ProductDto product){
+        Product newProduct = new Product();
+        newProduct.setId(id);
+        newProduct.setTitle(product.getTitle());
+        newProduct.setPrice(product.getPrice());
+        Category category = categoryService.findByTitle(product.getCategory()).get();
+        newProduct.setCategory(category);
+
+        productService.update(newProduct);
         return "redirect:/products/"+ id;
     }
 
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable long id){
-        productService.delete(id);
+        productService.deleteById(id);
         return "redirect:/products/show_all";
     }
 
-    @GetMapping("/{id}/users")
-    @ResponseBody
-    public List<User> showUsers( @PathVariable long id){
-        return productService.showUsers(id);
-    }
 }

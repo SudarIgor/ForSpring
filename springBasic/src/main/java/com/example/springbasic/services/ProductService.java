@@ -1,28 +1,28 @@
 package com.example.springbasic.services;
 
 import com.example.springbasic.model.Product;
-import com.example.springbasic.model.User;
-import com.example.springbasic.repositories.ProductDAO;
+import com.example.springbasic.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-@Component
+@Service
 public class ProductService {
-    private ProductDAO productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    public ProductService(ProductDAO productDAO) {
+    public ProductService(ProductRepository productDAO) {
         this.productRepository = productDAO;
     }
 
-    public Product findById (long id){
-        return productRepository.findeById(id);
+    public Optional<Product> findById (long id){
+        return productRepository.findById(id);
     }
 
     public List<Product> findAll(){
-        return productRepository.findeAll();
+        return productRepository.findAll();
     }
 
     public void save (Product product){
@@ -30,18 +30,22 @@ public class ProductService {
     }
 
     public void updatePrice(long id, double prise) {
-        productRepository.updatePrice(id, prise);
+        productRepository.changePriceBy(id, prise);
     }
 
     public void update(Product product) {
-        productRepository.update(product);
+        productRepository.save(product);
     }
 
-    public void delete(long id) {
-        productRepository.delete(id);
+    public void deleteById(long id) {
+        productRepository.deleteById(id);
     }
 
-    public List<User> showUsers(long id){
-        return productRepository.showUsers(id);
+    public List<Product> findByPriceGreaterThanEqual(Double min) {
+        return productRepository.findByPriceGreaterThanEqual(min);
+    }
+
+    public void changePriceBy(long id, Double ch) {
+        productRepository.changePriceBy(id, ch);
     }
 }

@@ -17,13 +17,18 @@ public class Product {
     @Column (name="price")
     private double price;
 
-    @ManyToMany
-    @JoinTable(
-            name = "products_categories",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> users;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
 
 
     public Product() {
@@ -59,13 +64,7 @@ public class Product {
         this.price = cost;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 
     @Override
     public String toString() {

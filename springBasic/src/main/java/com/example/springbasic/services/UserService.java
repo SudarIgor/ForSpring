@@ -26,7 +26,5 @@ public class UserService {
         return userDAO.findById(id);
     }
 
-    public List<Product> showProducts(long id) {
-        return userDAO.showProducts(id);
-    }
+
 }

@@ -36,12 +36,4 @@ public class UserDAO {
 
     }
 
-    public List<Product> showProducts(long id){
-        Session session = factory.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        List<Product> products = session.get(User.class, id).getProducts();
-        System.out.println(products);
-        session.close();
-        return products;
-    }
 }

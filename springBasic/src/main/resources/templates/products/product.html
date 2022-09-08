@@ -17,20 +17,22 @@
             <td></td>
             <td>Price</td>
             <td></td>
+            <td>Category</td>
             <td></td>
         </tr>
         <tr>
-            <td th:text="${product.id}">id</td>
-            <td th:text="${product.title}">title</td>
-            <td>   <a class="btn btn-primary" th:href="@{'/products/' + ${product.id} +'/change_price?price=-1'}" > - </a></td>
-            <td th:text="${product.price}">cost</td>
-            <td> <a class="btn btn-primary" th:href="@{'/products/' + ${product.id} +'/change_price?price=1'}" > + </a></td>
-            <td> <a class="btn btn-danger" th:href="@{'/products/' + ${product.id} +'/delete'}" > X </a></td>
+            <td th:text="${product.get().id}">id</td>
+            <td th:text="${product.get().title}">title</td>
+            <td>   <a class="btn btn-primary" th:href="@{'/products/' + ${product.get().id} +'/change_price?price=-1'}" > - </a></td>
+            <td th:text="${product.get().price}">cost</td>
+            <td> <a class="btn btn-primary" th:href="@{'/products/' + ${product.get().id} +'/change_price?price=1'}" > + </a></td>
+            <td th:text="${product.get().category}">category</td>
+            <td> <a class="btn btn-danger" th:href="@{'/products/' + ${product.get().id} +'/delete'}" > X </a></td>
         </tr>
 
     </table>
      <div class="mb-3">
-         <a th:href="@{'/products/'+ ${product.id} +'/update'}" class="btn btn-primary">Update products</a>
+         <a th:href="@{'/products/'+ ${product.get().id} +'/update'}" class="btn btn-primary">Update products</a>
          <a th:href="@{/products/show_all}" class="btn btn-primary">List of products</a>
      </div>
 

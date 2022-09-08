@@ -13,12 +13,10 @@
         <br>
         <table  class="table table-striped">
             <tr>
-                <td>ID</td>
                 <td>Title</td>
                 <td></td>
             </tr>
             <tr th:each="p : ${products}">
-                <td th:text="${p.id}"></td>
                 <td th:text="${p.title}"></td>
                 <td>
                     <a th:href="@{'/products/' + ${p.id}}" class="btn btn-primary">Info</a>

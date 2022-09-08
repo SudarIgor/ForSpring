@@ -17,13 +17,6 @@ public class User {
     @Column (name = "name")
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "products_categories",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products;
 
 
 
@@ -51,13 +44,6 @@ public class User {
         this.name = name;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
 
     @Override
     public String toString() {

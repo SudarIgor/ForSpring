@@ -37,10 +37,5 @@ public class UserController {
         return "users/user";
     }
 
-    @GetMapping("/{id}/products")
-        public String jsonShowProduct(@PathVariable long id, Model model){
-        model.addAttribute("products", userService.showProducts(id));
-        model.addAttribute("user", userService.findById(id));
-        return "/users/products";
-    }
+
 }

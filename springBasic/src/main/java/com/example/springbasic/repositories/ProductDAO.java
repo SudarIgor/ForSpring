@@ -5,9 +5,11 @@ import com.example.springbasic.model.User;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
-@Component
+@Repository
 public class ProductDAO {
     private Factory factory;
 
@@ -60,19 +62,11 @@ public class ProductDAO {
         session.getTransaction().commit();
     }
 
-    public void delete(long id){
+    public void deleteById(long id){
         Session session = factory.getSessionFactory().getCurrentSession();
         session.beginTransaction();
         session.createSQLQuery("DELETE from products WHERE id = " + id).executeUpdate();
         session.getTransaction().commit();
     }
 
-    public List<User> showUsers(long id){
-        Session session = factory.getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        List<User> users = session.get(Product.class, id).getUsers();
-        System.out.println(users);
-        session.close();
-        return users;
-    }
 }
