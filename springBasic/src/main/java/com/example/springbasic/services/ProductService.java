@@ -3,6 +3,8 @@ package com.example.springbasic.services;
 import com.example.springbasic.model.Product;
 import com.example.springbasic.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +23,8 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public List<Product> findAll(){
-        return productRepository.findAll();
+    public Page<Product> findAll(int pageIndex, int pageSize){
+        return productRepository.findAll(PageRequest.of(pageIndex, pageSize));
     }
 
     public void save (Product product){

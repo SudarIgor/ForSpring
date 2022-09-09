@@ -1,5 +1,7 @@
 package com.example.springbasic.DTO;
 
+import com.example.springbasic.model.Category;
+
 import java.io.Serializable;
 
 public class CategoryDto implements Serializable {
@@ -9,6 +11,11 @@ public class CategoryDto implements Serializable {
     public CategoryDto(Long id, String title) {
         this.id = id;
         this.title = title;
+    }
+
+    public CategoryDto (Category category){
+        this.id = category.getId();
+        this.title = category.getTitle();
     }
 
     public Long getId() {

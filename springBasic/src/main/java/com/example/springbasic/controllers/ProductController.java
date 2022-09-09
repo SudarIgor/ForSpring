@@ -1,16 +1,19 @@
 package com.example.springbasic.controllers;
 
+import com.example.springbasic.DTO.CategoryDto;
 import com.example.springbasic.DTO.ProductDto;
 import com.example.springbasic.model.Category;
 import com.example.springbasic.services.CategoryService;
 import com.example.springbasic.services.ProductService;
 import com.example.springbasic.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/products")
@@ -28,8 +31,9 @@ public class ProductController {
 
     @GetMapping("/json_all")
     @ResponseBody
-    public List<Product> productAllJson(){
-        return productService.findAll();
+    public Page<Product> productAllJson(@RequestParam (required = false, defaultValue = "0") int pageIndex,
+                                        @RequestParam (defaultValue = "10")  int pageSize){
+        return productService.findAll(pageIndex, pageSize);
     }
 
     @GetMapping("/json/{id}")
@@ -46,14 +50,22 @@ public class ProductController {
     }
 
     @GetMapping("/show_all")
-    public String productAll(Model model){
-        model.addAttribute("products", productService.findAll());
+    public String productAll(@RequestParam (required = false, defaultValue = "0")int pageIndex,
+                             @RequestParam (defaultValue = "10") int pageSize, Model model){
+        long [] totalPages  = new long[productService.findAll(pageIndex, pageSize).getTotalPages()];
+        for (int i = 0; i < totalPages.length; i++) {
+            totalPages[i] = i;
+        }
+        model.addAttribute("products", productService.findAll(pageIndex, pageSize));
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalProducts", productService.findAll(pageIndex, pageSize).getTotalElements());
         return "products/products";
     }
 
     @GetMapping("/{id}")
     public String productById(Model model, @PathVariable long id){
-        model.addAttribute("product", Optional.ofNullable(new ProductDto(productService.findById(id).get())));
+        model.addAttribute("product",
+                Optional.ofNullable(new ProductDto(productService.findById(id).get())));
         return "products/product";
     }
 
@@ -78,6 +90,8 @@ public class ProductController {
     @GetMapping("/{id}/update")
     public String showFormUpdate(@PathVariable long id,  Model model){
     model.addAttribute("product", new ProductDto(productService.findById(id).get()));
+    model.addAttribute("categories",
+            categoryService.findAll().stream().map(CategoryDto::new).collect(Collectors.toList()));
         return "products/update_product";
     }
 

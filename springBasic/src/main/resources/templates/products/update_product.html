@@ -20,10 +20,20 @@
             <label for="priseForm" class="form-label" >Price</label>
             <input type="text" class="form-control" th:field="*{price}"  id="priseForm" placeholder="${product.price}">
         </div>
-        <div class="mb-3">
+<!--        <div class="mb-3">-->
+<!--            <label for="categoryForm" class="form-label" >Category</label>-->
+<!--            <input type="text" class="form-control" th:field="*{category}"  id="categoryForm" placeholder="${product.category}">-->
+<!--        </div>-->
+
+        <div class="mb-3" >
             <label for="categoryForm" class="form-label" >Category</label>
-            <input type="text" class="form-control" th:field="*{category}"  id="categoryForm" placeholder="${product.category}">
+            <select class="form-select" aria-label="categories" id="categoryForm" th:field="*{category}">
+                <option selected th:value="${product.category}" th:text="${product.category}"></option>
+                <option th:each="cactegory : ${categories}" th:value="${cactegory.title}" th:text="${cactegory.title}">1</option>
+
+            </select>
         </div>
+
         <button type="submit"  class="btn btn-primary">Update</button>
     </form>
     <br>

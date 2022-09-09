@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/products/rest/")
+@RequestMapping("/products/rest")
 public class ProductRestController {
     private ProductService productService;
     private CategoryService categoryService;
@@ -27,10 +27,11 @@ public class ProductRestController {
         this.categoryService = categoryRepository;
     }
 
-    @GetMapping("/")
-    public List<ProductDto> productAll(){
+    @GetMapping("")
+    public List<ProductDto> productAll(@RequestParam (required = false, defaultValue = "0") int pageIndex,
+                                       @RequestParam (defaultValue = "10") int pageSize ){
 
-        return productService.findAll().stream().map(ProductDto:: new).collect(Collectors.toList());
+        return productService.findAll(pageIndex, pageSize).stream().map(ProductDto:: new).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -64,9 +65,10 @@ public class ProductRestController {
     }
 
     @GetMapping("/delete/{id}")
-    public List<Product> delete(@PathVariable long id){
+    public void delete(@PathVariable long id){
         productService.deleteById(id);
-        return productService.findAll();
+        productAll(1, 10);
+
     }
 
 }
