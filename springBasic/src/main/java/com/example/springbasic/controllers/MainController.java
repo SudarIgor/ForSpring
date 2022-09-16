@@ -12,11 +12,11 @@ public class MainController {
         return "info";
     }
 
-    @GetMapping("/index")
-    public String index (){
-        return "index";
-    }
-
+//    @GetMapping("/index")
+//    public String index (){
+//        return "777index";
+//    }
+//
 
 
 }

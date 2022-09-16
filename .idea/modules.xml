@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HomeWork1/HomeWork1.iml" filepath="$PROJECT_DIR$/HomeWork1/HomeWork1.iml" />
       <module fileurl="file://$PROJECT_DIR$/HomeWork3/HomeWork3.iml" filepath="$PROJECT_DIR$/HomeWork3/HomeWork3.iml" />
       <module fileurl="file://$PROJECT_DIR$/springBasic/springBasic.iml" filepath="$PROJECT_DIR$/springBasic/springBasic.iml" />
     </modules>

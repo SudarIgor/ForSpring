@@ -1,18 +1,11 @@
 angular.module('front-app', []).controller('indexController', function ($scope, $http) {
-    const contextPath = 'http://localhost:8189/market/';
+    const contextPath = 'http://localhost:8082/app/';
 
-    // $scope.loadProducts = function () {
-    //     $http.get(contextPath + 'products')
-    //         .then(function (response) {
-    //             console.log(response);
-    //             $scope.productsPage = response.data;
-    //         });
-    // };
 
-    $http.get('http://localhost:8082/app/products/json/1')
-        .then(function (response){
-            $scope.product = response.data;
-        })
+    // $http.get('http://localhost:8082/app/products/1')
+    //     .then(function (response){
+    //         $scope.product = response.data;
+    //     })
 
 
     $scope.loadProducts = function (pageIndex = 1) {
@@ -20,11 +13,14 @@ angular.module('front-app', []).controller('indexController', function ($scope, 
             url: contextPath + 'products',
             method: 'GET',
             params: {
-                p: pageIndex
+                pageIndex: pageIndex
             }
         }).then(function (response) {
             console.log(response);
             $scope.productsPage = response.data;
+            $scope.pages = response.data.totalPages;
+            $scope.pageNumber = response.data.number + 1;
+
         });
     };
 
@@ -32,17 +28,17 @@ angular.module('front-app', []).controller('indexController', function ($scope, 
         alert(product.title);
     };
 
-    // $scope.wrongRequest = function () {
-    // WRONG:
-    // $http.get(contextPath + 'products/update/1');
-    // reload();
+    $scope.delete = function (product) {
+        let id = product.id;
+        $http({
+            url: contextPath + 'products/delete/' + id,
+            method: 'GET',
 
-    // CORRECT
-    // $http.get(contextPath + 'products/update/1')
-    //     .then(function (response) {
-    //         reload();
-    //     });
-    // }
+        }).then(function (response) {
+            $scope.loadProducts();
+        });
+    };
+
 
     $scope.loadProducts(2);
 });

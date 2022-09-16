@@ -1,117 +1,88 @@
 package com.example.springbasic.controllers;
 
-import com.example.springbasic.DTO.CategoryDto;
-import com.example.springbasic.DTO.ProductDto;
+
 import com.example.springbasic.model.Category;
+import com.example.springbasic.model.Product;
+import com.example.springbasic.DTO.ProductDto;
+import com.example.springbasic.repositories.CategoryRepository;
+import com.example.springbasic.repositories.ProductRepository;
 import com.example.springbasic.services.CategoryService;
 import com.example.springbasic.services.ProductService;
-import com.example.springbasic.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/products")
 public class ProductController {
     private ProductService productService;
     private CategoryService categoryService;
 
-
-
     @Autowired
-    public ProductController(ProductService productService, CategoryService categoryService) {
-        this.productService = productService;
-        this.categoryService = categoryService;
+    public ProductController(ProductService productServis, CategoryService categoryRepository) {
+        this.productService = productServis;
+        this.categoryService = categoryRepository;
     }
 
-    @GetMapping("/json_all")
-    @ResponseBody
-    public Page<Product> productAllJson(@RequestParam (required = false, defaultValue = "0") int pageIndex,
-                                        @RequestParam (defaultValue = "10")  int pageSize){
-        return productService.findAll(pageIndex, pageSize);
-    }
-
-    @GetMapping("/json/{id}")
-    @ResponseBody
-    public Optional<Product> productAllJson(@PathVariable long id){
-        return productService.findById(id);
-    }
-
-//    @RequestBody Product product - означает, что прилетевший в теле запроса json необходимо преобразовать к Product
-    @PostMapping("/json")
-    @ResponseBody
-    public void saveProductJson(@RequestBody Product product){
-        productService.save(product);
-    }
-
-    @GetMapping("/show_all")
-    public String productAll(@RequestParam (required = false, defaultValue = "0")int pageIndex,
-                             @RequestParam (defaultValue = "10") int pageSize, Model model){
-        long [] totalPages  = new long[productService.findAll(pageIndex, pageSize).getTotalPages()];
-        for (int i = 0; i < totalPages.length; i++) {
-            totalPages[i] = i;
-        }
-        model.addAttribute("products", productService.findAll(pageIndex, pageSize));
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("totalProducts", productService.findAll(pageIndex, pageSize).getTotalElements());
-        return "products/products";
+    @GetMapping("")
+    public Page<ProductDto> productAll(@RequestParam (required = false, defaultValue = "0") int pageIndex,
+                                       @RequestParam (defaultValue = "10") int pageSize ){
+        if (pageIndex <1) pageIndex = 1;
+        if (pageSize < 1) pageSize = 10;
+        return productService.findAll(pageIndex - 1, pageSize).map(ProductDto:: new);
     }
 
     @GetMapping("/{id}")
-    public String productById(Model model, @PathVariable long id){
-        model.addAttribute("product",
-                Optional.ofNullable(new ProductDto(productService.findById(id).get())));
-        return "products/product";
+    public Optional <ProductDto> productById(@PathVariable long id){
+        return Optional.of(new ProductDto(productService.findById(id).get()));
     }
 
-    @GetMapping("/create")
-    public String showForm(Model model){
-        model.addAttribute("product", new Product());
-        return "products/create_product";
+    @GetMapping("/filter")
+    public List<ProductDto> productByFilter(@RequestParam (required = false) Double min, @RequestParam (required = false) Double max ) {
+
+        return productService.findByPriceGreaterThanEqual( min)
+                .stream().map(ProductDto::new).collect(Collectors.toList());
     }
 
-    @PostMapping("/create")
-    public String create(@ModelAttribute("product") Product product){
+    @GetMapping("/{id}/ch_pr")
+    public ProductDto changePrice(@PathVariable long id, @RequestParam (name = "ch", required = false) Double ch){
+        if (ch != null) productService.changePriceBy(id, ch);
+        return new ProductDto(productService.findById(id).get());
+    }
+
+    @PostMapping("")
+    //    @RequestBody Product product - означает, что прилетевший в теле запроса json необходимо преобразовать к Product
+    public ProductDto save(@RequestBody ProductDto productDTO){
+        Product product = new Product();
+        product.setTitle(productDTO.getTitle());
+        product.setPrice(productDTO.getPrice());
+        Category category = categoryService.findByTitle(productDTO.getCategory()).get();
+        product.setCategory(category);
         productService.save(product);
-        return "redirect:/products/show_all";
+        return new ProductDto(product);
     }
 
-    @GetMapping ("/{id}/change_price")
-    public String changeCost(@PathVariable long id, @RequestParam double price){
-        productService.updatePrice(id, price);
-        return "redirect:/products/" + id;
+    @PutMapping("/{id}/update")
+    //    @RequestBody Product product - означает, что прилетевший в теле запроса json необходимо преобразовать к Product
+    public ProductDto update(@PathVariable long id, @RequestBody ProductDto productDTO){
+        Product product = productService.findById(id).get();
+        product.setTitle(productDTO.getTitle());
+        product.setPrice(productDTO.getPrice());
+        Category category = categoryService.findByTitle(productDTO.getCategory()).get();
+        product.setCategory(category);
+        productService.save(product);
+        return new ProductDto(product);
     }
 
-    @GetMapping("/{id}/update")
-    public String showFormUpdate(@PathVariable long id,  Model model){
-    model.addAttribute("product", new ProductDto(productService.findById(id).get()));
-    model.addAttribute("categories",
-            categoryService.findAll().stream().map(CategoryDto::new).collect(Collectors.toList()));
-        return "products/update_product";
-    }
-
-    @PostMapping("/{id}/update")
-    public String update(@PathVariable long id, @ModelAttribute("product") ProductDto product){
-        Product newProduct = new Product();
-        newProduct.setId(id);
-        newProduct.setTitle(product.getTitle());
-        newProduct.setPrice(product.getPrice());
-        Category category = categoryService.findByTitle(product.getCategory()).get();
-        newProduct.setCategory(category);
-
-        productService.update(newProduct);
-        return "redirect:/products/"+ id;
-    }
-
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable long id){
+    @GetMapping("/delete/{id}")
+    public void delete(@PathVariable long id){
         productService.deleteById(id);
-        return "redirect:/products/show_all";
+        productAll(1, 10);
+
     }
 
 }
