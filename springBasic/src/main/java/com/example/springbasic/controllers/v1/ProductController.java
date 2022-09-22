@@ -1,23 +1,19 @@
-package com.example.springbasic.controllers;
+package com.example.springbasic.controllers.v1;
 
 
+import com.example.springbasic.exceptions.ResourceNotFoundException;
 import com.example.springbasic.model.Category;
 import com.example.springbasic.model.Product;
-import com.example.springbasic.DTO.ProductDto;
-import com.example.springbasic.repositories.CategoryRepository;
-import com.example.springbasic.repositories.ProductRepository;
+import com.example.springbasic.dto.ProductDto;
 import com.example.springbasic.services.CategoryService;
 import com.example.springbasic.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/v1/products")
 public class ProductController {
     private ProductService productService;
     private CategoryService categoryService;
@@ -37,42 +33,32 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Optional <ProductDto> productById(@PathVariable long id){
-        return Optional.of(new ProductDto(productService.findById(id).get()));
-    }
+    public ProductDto productById(@PathVariable long id){
 
-    @GetMapping("/filter")
-    public List<ProductDto> productByFilter(@RequestParam (required = false) Double min, @RequestParam (required = false) Double max ) {
-
-        return productService.findByPriceGreaterThanEqual( min)
-                .stream().map(ProductDto::new).collect(Collectors.toList());
-    }
-
-    @GetMapping("/{id}/ch_pr")
-    public ProductDto changePrice(@PathVariable long id, @RequestParam (name = "ch", required = false) Double ch){
-        if (ch != null) productService.changePriceBy(id, ch);
-        return new ProductDto(productService.findById(id).get());
+        return new ProductDto(productService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product id = " + id + " not found")));
     }
 
     @PostMapping("")
-    //    @RequestBody Product product - означает, что прилетевший в теле запроса json необходимо преобразовать к Product
     public ProductDto save(@RequestBody ProductDto productDTO){
         Product product = new Product();
         product.setTitle(productDTO.getTitle());
         product.setPrice(productDTO.getPrice());
-        Category category = categoryService.findByTitle(productDTO.getCategory()).get();
+        Category category = categoryService.findByTitle(productDTO.getCategory())
+                .orElseThrow(() -> new ResourceNotFoundException("Category = " + productDTO.getCategory() + " not found"));
         product.setCategory(category);
         productService.save(product);
         return new ProductDto(product);
     }
 
     @PutMapping("/{id}/update")
-    //    @RequestBody Product product - означает, что прилетевший в теле запроса json необходимо преобразовать к Product
     public ProductDto update(@PathVariable long id, @RequestBody ProductDto productDTO){
-        Product product = productService.findById(id).get();
+        Product product = productService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product id = " + id + " not found"));
         product.setTitle(productDTO.getTitle());
         product.setPrice(productDTO.getPrice());
-        Category category = categoryService.findByTitle(productDTO.getCategory()).get();
+        Category category = categoryService.findByTitle(productDTO.getCategory())
+                .orElseThrow(() -> new ResourceNotFoundException("Category = " + productDTO.getCategory() + " not found"));
         product.setCategory(category);
         productService.save(product);
         return new ProductDto(product);

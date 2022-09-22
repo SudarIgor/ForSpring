@@ -26,4 +26,12 @@ public class CategoryService {
     public List<Category> findAll(){
         return categoryRepository.findAll();
     }
+
+    public Optional<Category> findById(long id) {
+        return categoryRepository.findById(id);
+    }
+
+    public void save(Category category) {
+        categoryRepository.save(category);
+    }
 }

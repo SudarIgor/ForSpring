@@ -1,4 +1,4 @@
-package com.example.springbasic.DTO;
+package com.example.springbasic.dto;
 
 import com.example.springbasic.model.Category;
 

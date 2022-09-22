@@ -2,25 +2,22 @@ angular.module('front-app', []).controller('indexController', function ($scope, 
     const contextPath = 'http://localhost:8082/app/';
 
 
-    // $http.get('http://localhost:8082/app/products/1')
-    //     .then(function (response){
-    //         $scope.product = response.data;
-    //     })
+    $http.get(contextPath + 'v1/categories')
+        .then(function (response){
+            $scope.categories = response.data;
+        })
 
 
     $scope.loadProducts = function (pageIndex = 1) {
         $http({
-            url: contextPath + 'products',
+            url: contextPath + 'v1/products',
             method: 'GET',
             params: {
                 pageIndex: pageIndex
             }
         }).then(function (response) {
-            console.log(response);
             $scope.productsPage = response.data;
-            $scope.pages = response.data.totalPages;
-            $scope.pageNumber = response.data.number + 1;
-
+            $scope.paginationArray = $scope.generatePagesIndexes(1, $scope.productsPage.totalPages);
         });
     };
 
@@ -31,7 +28,7 @@ angular.module('front-app', []).controller('indexController', function ($scope, 
     $scope.delete = function (product) {
         let id = product.id;
         $http({
-            url: contextPath + 'products/delete/' + id,
+            url: contextPath + 'v1/products/delete/' + id,
             method: 'GET',
 
         }).then(function (response) {
@@ -39,6 +36,26 @@ angular.module('front-app', []).controller('indexController', function ($scope, 
         });
     };
 
+    $scope.createNewProduct =function (){
 
-    $scope.loadProducts(2);
+        $http.post(contextPath + 'v1/products',  $scope.new_product)
+            .then(function successCallback (response) {
+            $scope.loadProducts();
+            $scope.new_product = null;
+        }, function failureCallback (response) {
+            console.log(response);
+            alert(response.data.messages);
+        });
+        console.log($scope.new_product);
+    }
+
+    $scope.generatePagesIndexes = function (startPage, endPage) {
+        let arr = [];
+        for (let i = startPage; i < endPage + 1; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }
+
+    $scope.loadProducts();
 });
