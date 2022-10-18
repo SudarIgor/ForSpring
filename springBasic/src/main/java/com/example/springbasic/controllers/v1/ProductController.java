@@ -1,6 +1,7 @@
 package com.example.springbasic.controllers.v1;
 
 
+import com.example.springbasic.exceptions.DataValidationException;
 import com.example.springbasic.exceptions.ResourceNotFoundException;
 import com.example.springbasic.model.Category;
 import com.example.springbasic.model.Product;
@@ -9,7 +10,11 @@ import com.example.springbasic.services.CategoryService;
 import com.example.springbasic.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -40,31 +45,49 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ProductDto save(@RequestBody ProductDto productDTO){
+    public ProductDto save(@RequestBody @Validated ProductDto productDTO, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()){
+            throw new DataValidationException(bindingResult.getAllErrors()
+                    .stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList()));
+        }
+
+        Category category = categoryService.findByTitle(productDTO.getCategory())
+                .orElseThrow(() -> new ResourceNotFoundException("Category = " + productDTO.getCategory() + " not found"));
+
         Product product = new Product();
+
         product.setTitle(productDTO.getTitle());
         product.setPrice(productDTO.getPrice());
-        Category category = categoryService.findByTitle(productDTO.getCategory())
-                .orElseThrow(() -> new ResourceNotFoundException("Category = " + productDTO.getCategory() + " not found"));
         product.setCategory(category);
+
         productService.save(product);
         return new ProductDto(product);
     }
 
-    @PutMapping("/{id}/update")
-    public ProductDto update(@PathVariable long id, @RequestBody ProductDto productDTO){
-        Product product = productService.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product id = " + id + " not found"));
-        product.setTitle(productDTO.getTitle());
-        product.setPrice(productDTO.getPrice());
+    @PutMapping("")
+    public ProductDto update(@RequestBody @Validated ProductDto productDTO, BindingResult bindingResult){
+
+        if(bindingResult.hasErrors()){
+           throw new DataValidationException(bindingResult.getAllErrors()
+                   .stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList()));
+        }
+
+        Product product = productService.findById(productDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Product id = " + productDTO.getId() + " not found"));
+
         Category category = categoryService.findByTitle(productDTO.getCategory())
                 .orElseThrow(() -> new ResourceNotFoundException("Category = " + productDTO.getCategory() + " not found"));
+
+        product.setTitle(productDTO.getTitle());
+        product.setPrice(productDTO.getPrice());
         product.setCategory(category);
+
         productService.save(product);
         return new ProductDto(product);
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable long id){
         productService.deleteById(id);
         productAll(1, 10);

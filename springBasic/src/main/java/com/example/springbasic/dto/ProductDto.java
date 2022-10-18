@@ -1,15 +1,26 @@
 package com.example.springbasic.dto;
 
 import com.example.springbasic.model.Product;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.*;
 import java.io.Serializable;
 
 
 public class ProductDto implements Serializable {
 
     private long id;
+
+    @NotEmpty(message = "Товар должен иметь название")
+    @Length (min = 3, max = 255, message = "Название товара должно состоять от 3 до 255 символов")
     private String title;
+
+    @NotNull(message = "Товар должен иметь цену")
+    @DecimalMin(value = "0.01", message = "Цена должна быть более 0")
     private double price;
+
+    @NotEmpty
+    @Length(min = 3, max = 20, message = "Название категории должно быть от 3 до 20 символов")
     private String category;
 
     public ProductDto() {

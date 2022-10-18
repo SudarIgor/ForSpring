@@ -1,0 +1,13 @@
+<div class="container" ng-controller="editProductController">
+    <h1>Изменение продукта</h1>
+    <form novalidate ng-submit="updateProduct()">
+        <input class="form-control" type="number" placeholder="{{updated_product.id}}" readonly ng-model="updated_product.id">
+        <input class="form-control" type="text" placeholder="{{updated_product.title}}" ng-model="updated_product.title">
+        <input class="form-control" type="number" placeholder="{{updated_product.price}}" ng-model="updated_product.price">
+        <select class="form-select" aria-label="categories"  ng-model="updated_product.category">
+            <option ng-repeat="category in categories" placeholder="Категория" value="{{category.title}}">{{category.title}}</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Обновить</button>
+    </form>
+
+ </div>
