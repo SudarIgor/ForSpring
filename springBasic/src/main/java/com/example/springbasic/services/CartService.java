@@ -28,8 +28,7 @@ public class CartService
         }
 
         for (CartItm c: cart.getProducts()) {
-            System.out.println(new ProductDto(c.getProduct()));
-            if(c.getProduct().equals(product)) {
+               if(c.getProduct().equals(product)) {
                 c.changeCount(1);
                 found = true;
             }
@@ -48,7 +47,7 @@ public class CartService
                         cart.getProducts().remove(c);
                         break;
                     }
-                    c.setCount(-1);
+                    c.setCount(c.getCount()-1);
                     break;
                 }
             }

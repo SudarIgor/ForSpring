@@ -6,8 +6,6 @@ import com.example.springbasic.model.Cart;
 import com.example.springbasic.services.CartService;
 import com.example.springbasic.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,7 +36,8 @@ public class CartController {
     }
 
     @DeleteMapping
-    public CartDto delete (){
+    public CartDto delete (@RequestBody  ProductDto productDto){
+        cartService.deleteProduct(productService.findById(productDto.getId()).get());
         return new CartDto(cart);
     }
 

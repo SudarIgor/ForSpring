@@ -2,15 +2,11 @@ package com.example.springbasic.controllers.v1;
 
 
 import com.example.springbasic.dto.CategoryDto;
-import com.example.springbasic.dto.ProductDto;
 import com.example.springbasic.exceptions.ResourceNotFoundException;
 import com.example.springbasic.model.Category;
-import com.example.springbasic.model.Product;
 import com.example.springbasic.services.CategoryService;
 import com.example.springbasic.services.ProductService;
-import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
